@@ -9,7 +9,6 @@ import java.math.BigDecimal;
 @Revision("1.0")//for versioning events
 @Getter
 @AllArgsConstructor
-public class WalletCreatedEvent {
-    private String walletId;
-    private BigDecimal balance;
+public class DepositedEvent {
+    private BigDecimal depositAmount;
 }
