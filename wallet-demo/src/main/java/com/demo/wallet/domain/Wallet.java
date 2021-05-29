@@ -102,7 +102,7 @@ public class Wallet {
     }
 
     @EventSourcingHandler
-    protected void handle(PhoneNumberChangedEvent event) {
+    protected void on(PhoneNumberChangedEvent event) {
         this.phoneNumber = event.getPhoneNumber();
     }
 
