@@ -1,3 +1,3 @@
 # axon_presentation
-It will be presentation about axon freamwork with demo application :) 
+It will be a presentation about axon freamwork with demo application :) 
 
