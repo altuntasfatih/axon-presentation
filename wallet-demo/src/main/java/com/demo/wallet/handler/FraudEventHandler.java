@@ -13,7 +13,7 @@ import org.springframework.stereotype.Component;
 public class FraudEventHandler {
 
     @EventHandler//act on incoming event
-    public void handle(DepositedEvent event, @SourceId String walletId) {
+    public void on(DepositedEvent event, @SourceId String walletId) {
         //the place where ou would put your business logic to be performed when an event is received
 
         //feed fraudApi for deposit event

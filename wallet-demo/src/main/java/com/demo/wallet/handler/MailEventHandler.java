@@ -12,7 +12,7 @@ import org.springframework.stereotype.Component;
 @ProcessingGroup("mail")//it is a Tracking Event Processors.Look token_entry table.It works like as outbox pattern
 public class MailEventHandler {
     @EventHandler//act on incoming event
-    public void handle(PaidEvent event, @SourceId String walletId) {
+    public void on(PaidEvent event, @SourceId String walletId) {
         //the place where ou would put your business logic to be performed when an event is received
 
         //send mail for deposit event
