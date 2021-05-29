@@ -18,7 +18,7 @@ import org.axonframework.spring.stereotype.Aggregate;
 
 import java.math.BigDecimal;
 
-@Aggregate//a.k.a know as Aggregate root(Event Sources Aggregate)
+@Aggregate(snapshotTriggerDefinition = "walletSnapshotTrigger")//a.k.a know as Aggregate root(Event Sources Aggregate)
 @Getter
 @NoArgsConstructor
 public class Wallet {
