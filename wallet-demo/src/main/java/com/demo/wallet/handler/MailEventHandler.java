@@ -1,6 +1,6 @@
 package com.demo.wallet.handler;
 
-import com.demo.wallet.event.DepositedEvent;
+import com.demo.wallet.event.PaidEvent;
 import lombok.extern.slf4j.Slf4j;
 import org.axonframework.config.ProcessingGroup;
 import org.axonframework.eventhandling.EventHandler;
@@ -9,10 +9,10 @@ import org.springframework.stereotype.Component;
 
 @Slf4j
 @Component
-@ProcessingGroup("mail")//it is a Tracking Event Processors
+@ProcessingGroup("mail")//it is a Tracking Event Processors.Look token_entry table.It works like as outbox pattern
 public class MailEventHandler {
     @EventHandler//act on incoming event
-    public void handle(DepositedEvent event, @SourceId String walletId) {
+    public void handle(PaidEvent event, @SourceId String walletId) {
         //the place where ou would put your business logic to be performed when an event is received
 
         //send mail for deposit event

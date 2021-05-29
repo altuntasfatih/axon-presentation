@@ -9,7 +9,7 @@ import org.springframework.stereotype.Component;
 
 @Slf4j
 @Component
-@ProcessingGroup("fraud")//Subscribing Event Processors
+@ProcessingGroup("fraud")//It is a Subscribing Event Processors.
 public class FraudEventHandler {
 
     @EventHandler//act on incoming event
