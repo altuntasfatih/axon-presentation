@@ -1,7 +1,6 @@
 package com.demo.wallet.service;
 
-import com.demo.wallet.command.CreateWalletCommand;
-import com.demo.wallet.command.DepositCommand;
+import com.demo.wallet.command.*;
 import org.axonframework.commandhandling.gateway.CommandGateway;
 import org.springframework.stereotype.Service;
 
@@ -26,7 +25,13 @@ public class WalletService {
         sendCommand(command);
     }
 
+    public void pay(String walletId, BigDecimal payAmount) {
+        final PayCommand command = new PayCommand(walletId, payAmount);
+        sendCommand(command);
+    }
+
     protected <T> T sendCommand(Object command) {
         return commandGateway.sendAndWait(command);
     }
+
 }

@@ -11,6 +11,6 @@ import java.math.BigDecimal;
 @Getter
 @AllArgsConstructor
 @NoArgsConstructor
-public class DepositedEvent {
-    private BigDecimal depositAmount;
+public class PaidEvent {
+    private BigDecimal payAmount;
 }

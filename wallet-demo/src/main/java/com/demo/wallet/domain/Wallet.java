@@ -2,9 +2,12 @@ package com.demo.wallet.domain;
 
 import com.demo.wallet.command.CreateWalletCommand;
 import com.demo.wallet.command.DepositCommand;
+import com.demo.wallet.command.PayCommand;
 import com.demo.wallet.event.DepositedEvent;
+import com.demo.wallet.event.PaidEvent;
 import com.demo.wallet.event.WalletCreatedEvent;
 import com.demo.wallet.exception.DepositLimitExceedException;
+import com.demo.wallet.exception.InsufficientFundsException;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.axonframework.commandhandling.CommandHandler;
@@ -54,9 +57,32 @@ public class Wallet {
         this.balance = this.balance.add(event.getDepositAmount());
     }
 
+    @CommandHandler
+    public void handle(PayCommand command) {
+        //the place where you would put your decision-making/business logic.Because aggregate is in the correct state to decide
+        final BigDecimal payAmount = command.getPayAmount();
+
+        checkBalance(payAmount);
+
+        var event = new PaidEvent(payAmount);
+        AggregateLifecycle.apply(event);
+    }
+
+    @EventSourcingHandler//it used to form aggregate current state.(a.k.s Aggregation)
+    protected void handle(PaidEvent event) {
+        //the place where you would change the aggregate state.
+        this.balance = this.balance.subtract(event.getPayAmount());
+    }
+
     private void checkDepositLimit(BigDecimal depositAmount) {
         if (this.balance.add(depositAmount).compareTo(BigDecimal.valueOf(750)) > 0) {
             throw new DepositLimitExceedException();
+        }
+    }
+
+    private void checkBalance(BigDecimal requestAmount) {
+        if (balance.compareTo(requestAmount) < 0) {
+            throw new InsufficientFundsException();
         }
     }
 }

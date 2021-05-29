@@ -24,4 +24,9 @@ public class WalletController {
     public void deposit(@PathVariable("walletId") String walletId, @RequestBody DepositRequest request) {
         walletService.deposit(walletId, request.getAmount());
     }
+
+    @PostMapping("/{walletId}/pay")
+    public void pay(@PathVariable("walletId") String walletId, @RequestBody DepositRequest request) {
+        walletService.pay(walletId, request.getAmount());
+    }
 }
