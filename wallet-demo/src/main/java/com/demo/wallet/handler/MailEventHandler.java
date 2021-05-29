@@ -9,14 +9,13 @@ import org.springframework.stereotype.Component;
 
 @Slf4j
 @Component
-@ProcessingGroup("fraud")//Subscribing Event Processors
-public class FraudEventHandler {
-
+@ProcessingGroup("mail")//it is a Tracking Event Processors
+public class MailEventHandler {
     @EventHandler//act on incoming event
     public void handle(DepositedEvent event, @SourceId String walletId) {
         //the place where ou would put your business logic to be performed when an event is received
 
-        //feed fraudApi for deposit event
-        log.info("{} for wallet: {} is sent to fraud ", event.toString(), walletId);
+        //send mail for deposit event
+        log.info("{} for wallet: {} is mail sent", event.toString(), walletId);
     }
 }

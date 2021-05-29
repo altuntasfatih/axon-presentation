@@ -16,3 +16,11 @@ spring:
 axon:
   serializer:
     events: jackson
+  eventhandling:
+    processors:
+      fraud:
+        source: eventBus
+        mode: subscribing
+      mail:
+        mode: tracking
+
