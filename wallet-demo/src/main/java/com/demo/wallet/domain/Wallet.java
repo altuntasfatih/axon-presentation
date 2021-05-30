@@ -1,13 +1,7 @@
 package com.demo.wallet.domain;
 
-import com.demo.wallet.command.CreateWalletCommand;
-import com.demo.wallet.command.DepositCommand;
-import com.demo.wallet.command.PayCommand;
-import com.demo.wallet.command.WithdrawCommand;
-import com.demo.wallet.event.DepositedEvent;
-import com.demo.wallet.event.PaidEvent;
-import com.demo.wallet.event.WalletCreatedEvent;
-import com.demo.wallet.event.WithdrawnEvent;
+import com.demo.wallet.command.*;
+import com.demo.wallet.event.*;
 import com.demo.wallet.exception.DepositLimitExceedException;
 import com.demo.wallet.exception.InsufficientFundsException;
 import lombok.Getter;
@@ -30,6 +24,7 @@ public class Wallet {
     @AggregateIdentifier
     private String walletId;// it is hard requirements
     private BigDecimal balance;
+    private String phoneNumber = "";
 
     @CommandHandler
     public Wallet(CreateWalletCommand command) {
@@ -62,7 +57,6 @@ public class Wallet {
 
     @CommandHandler
     public void handle(PayCommand command) {
-        //the place where you would put your decision-making/business logic.Because aggregate is in the correct state to decide
         final BigDecimal payAmount = command.getPayAmount();
 
         checkBalance(payAmount);
@@ -71,7 +65,7 @@ public class Wallet {
         AggregateLifecycle.apply(event);
     }
 
-    @EventSourcingHandler//it used to form aggregate current state.(a.k.s Aggregation)
+    @EventSourcingHandler
     protected void handle(PaidEvent event) {
         //the place where you would change the aggregate state.
         this.balance = this.balance.subtract(event.getPayAmount());
@@ -79,7 +73,6 @@ public class Wallet {
 
     @CommandHandler//if we don't provide a conflictResolver, it expects to last version come
     public void handle(WithdrawCommand command) {
-        //the place where you would put your decision-making/business logic.Because aggregate is in the correct state to decide
         final BigDecimal withdrawAmount = command.getWithdrawAmount();
 
         checkBalance(withdrawAmount);
@@ -88,10 +81,29 @@ public class Wallet {
         AggregateLifecycle.apply(event);
     }
 
-    @EventSourcingHandler//it used to form aggregate current state.(a.k.s Aggregation)
+    @EventSourcingHandler
     protected void handle(WithdrawnEvent event) {
         //the place where you would change the aggregate state.
         this.balance = this.balance.subtract(event.getWithdrawAmount());
+    }
+
+    @CommandHandler
+    public void handle(ChangePhoneNumberCommand command, ConflictResolver conflictResolver) {
+        /*
+            If PhoneNumberChangedEvent events have taken place since the targeted version, that's a conflict.
+            other events like WithdrawnEvent,DepositedEvent are no problem.They never create a conflict on phoneNumber state.
+         */
+        conflictResolver.detectConflicts(
+                events -> events.stream().anyMatch(
+                        event -> event.getPayloadType().equals(PhoneNumberChangedEvent.class)));
+
+        var event = new PhoneNumberChangedEvent(command.getPhoneNumber());
+        AggregateLifecycle.apply(event);
+    }
+
+    @EventSourcingHandler
+    protected void handle(PhoneNumberChangedEvent event) {
+        this.phoneNumber = event.getPhoneNumber();
     }
 
     private void checkDepositLimit(BigDecimal depositAmount) {

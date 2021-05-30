@@ -13,6 +13,9 @@ import org.junit.jupiter.api.Test;
 
 import java.math.BigDecimal;
 
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.comparesEqualTo;
+
 public class WithdrawTest {
 
     private static final String WALLET_ID = "TEST";
@@ -32,7 +35,11 @@ public class WithdrawTest {
         final BigDecimal withdrawAmount = new BigDecimal("100.00");
         textFixture.when(new WithdrawCommand(WALLET_ID, VERSION, withdrawAmount))
                 .expectSuccessfulHandlerExecution()
-                .expectEvents(new WithdrawnEvent(withdrawAmount));
+                .expectEvents(new WithdrawnEvent(withdrawAmount))
+                .expectState(wallet -> {
+                    assertThat(wallet.getBalance(), comparesEqualTo(new BigDecimal("400")));
+                });
+
     }
 
     @Test

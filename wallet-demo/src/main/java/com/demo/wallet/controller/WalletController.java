@@ -1,5 +1,6 @@
 package com.demo.wallet.controller;
 
+import com.demo.wallet.message.ChangePhoneNumberRequest;
 import com.demo.wallet.message.DepositRequest;
 import com.demo.wallet.message.WithdrawRequest;
 import com.demo.wallet.service.WalletService;
@@ -34,5 +35,10 @@ public class WalletController {
     @PostMapping("/{walletId}/withdraw")
     public void withdraw(@PathVariable("walletId") String walletId, @RequestBody WithdrawRequest request) {
         walletService.withdraw(walletId, request.getVersion(), request.getAmount());
+    }
+
+    @PostMapping("/{walletId}/phoneNumber")
+    public void changePhoneNumber(@PathVariable("walletId") String walletId, @RequestBody ChangePhoneNumberRequest request) {
+        walletService.changePhoneNumber(walletId, request.getVersion(), request.getPhoneNumber());
     }
 }

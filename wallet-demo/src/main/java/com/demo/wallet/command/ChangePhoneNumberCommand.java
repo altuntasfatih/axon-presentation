@@ -4,26 +4,22 @@ import lombok.Getter;
 import org.axonframework.modelling.command.TargetAggregateIdentifier;
 import org.axonframework.modelling.command.TargetAggregateVersion;
 
-import java.math.BigDecimal;
-
 @Getter
-public class WithdrawCommand {
+public class ChangePhoneNumberCommand {
 
-    //to find aggregate it is mandatory
+    /*to find aggregate it is mandatory */
     @TargetAggregateIdentifier
     private final String walletId;
 
-    /*
-     @TargetAggregateVersion is used to indicate the expected version of the Aggregate.
-    */
+    /* @TargetAggregateVersion is used to indicate the expected version of the Aggregate.*/
     @TargetAggregateVersion
     private final Long version;
 
-    private final BigDecimal withdrawAmount;
+    private final String phoneNumber;
 
-    public WithdrawCommand(String walletId, Long version, BigDecimal withdrawAmount) {
+    public ChangePhoneNumberCommand(String walletId, Long version, String phoneNumber) {
         this.walletId = walletId;
         this.version = version;
-        this.withdrawAmount = withdrawAmount;
+        this.phoneNumber = phoneNumber;
     }
 }

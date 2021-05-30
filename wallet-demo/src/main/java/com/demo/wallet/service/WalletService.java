@@ -39,6 +39,11 @@ public class WalletService {
         sendCommand(command);
     }
 
+    public void changePhoneNumber(String walletId, Long version, String phoneNumber) {
+        final ChangePhoneNumberCommand command = new ChangePhoneNumberCommand(walletId, version, phoneNumber);
+        sendCommand(command);
+    }
+
     //we can trigger taking snapshot manually.
     public void takeSnapshot(String walletId) {
         snapshotter.scheduleSnapshot(Wallet.class, walletId);
