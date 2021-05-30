@@ -17,7 +17,7 @@ import static org.hamcrest.Matchers.comparesEqualTo;
 
 public class PayTest {
 
-    private static String WALLET_ID = "TEST";
+    private static final String WALLET_ID = "TEST";
     private TestExecutor<Wallet> textFixture;
 
     @BeforeEach

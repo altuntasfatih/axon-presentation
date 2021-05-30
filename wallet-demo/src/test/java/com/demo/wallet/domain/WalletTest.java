@@ -10,7 +10,7 @@ import org.junit.jupiter.api.Test;
 import java.math.BigDecimal;
 
 public class WalletTest {
-    private static String WALLET_ID = "TEST";
+    private static final String WALLET_ID = "TEST";
     private FixtureConfiguration<Wallet> textFixture;
 
     @BeforeEach

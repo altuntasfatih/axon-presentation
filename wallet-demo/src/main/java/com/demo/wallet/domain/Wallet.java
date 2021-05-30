@@ -15,7 +15,6 @@ import lombok.NoArgsConstructor;
 import org.axonframework.commandhandling.CommandHandler;
 import org.axonframework.eventsourcing.EventSourcingHandler;
 import org.axonframework.eventsourcing.conflictresolution.ConflictResolver;
-import org.axonframework.eventsourcing.conflictresolution.Conflicts;
 import org.axonframework.modelling.command.AggregateIdentifier;
 import org.axonframework.modelling.command.AggregateLifecycle;
 import org.axonframework.spring.stereotype.Aggregate;
@@ -79,7 +78,7 @@ public class Wallet {
     }
 
     @CommandHandler//if we don't provide a conflictResolver, it expects to last version come
-    public void handle(WithdrawCommand command, ConflictResolver conflictResolver) {
+    public void handle(WithdrawCommand command) {
         //the place where you would put your decision-making/business logic.Because aggregate is in the correct state to decide
         final BigDecimal withdrawAmount = command.getWithdrawAmount();
 
