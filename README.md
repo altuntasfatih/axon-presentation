@@ -13,6 +13,8 @@ Branches:
 * [command-event](https://github.com/altuntasfatih/axon_presentation/tree/axon/command-event)
 * [event-handler](https://github.com/altuntasfatih/axon_presentation/tree/axon/event-handler)
 * [snapshotting](https://github.com/altuntasfatih/axon_presentation/tree/axon/snapshotting)
+* [conflict](https://github.com/altuntasfatih/axon_presentation/tree/axon/conflict)
+
 
 Not: It is not finished yet.
 
