@@ -1,6 +1,7 @@
 package com.demo.wallet.controller;
 
 import com.demo.wallet.message.DepositRequest;
+import com.demo.wallet.message.WithdrawRequest;
 import com.demo.wallet.service.WalletService;
 import org.springframework.web.bind.annotation.*;
 
@@ -28,5 +29,10 @@ public class WalletController {
     @PostMapping("/{walletId}/pay")
     public void pay(@PathVariable("walletId") String walletId, @RequestBody DepositRequest request) {
         walletService.pay(walletId, request.getAmount());
+    }
+
+    @PostMapping("/{walletId}/withdraw")
+    public void withdraw(@PathVariable("walletId") String walletId, @RequestBody WithdrawRequest request) {
+        walletService.withdraw(walletId, request.getVersion(), request.getAmount());
     }
 }

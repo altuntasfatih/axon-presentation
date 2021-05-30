@@ -3,15 +3,19 @@ package com.demo.wallet.domain;
 import com.demo.wallet.command.CreateWalletCommand;
 import com.demo.wallet.command.DepositCommand;
 import com.demo.wallet.command.PayCommand;
+import com.demo.wallet.command.WithdrawCommand;
 import com.demo.wallet.event.DepositedEvent;
 import com.demo.wallet.event.PaidEvent;
 import com.demo.wallet.event.WalletCreatedEvent;
+import com.demo.wallet.event.WithdrawnEvent;
 import com.demo.wallet.exception.DepositLimitExceedException;
 import com.demo.wallet.exception.InsufficientFundsException;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.axonframework.commandhandling.CommandHandler;
 import org.axonframework.eventsourcing.EventSourcingHandler;
+import org.axonframework.eventsourcing.conflictresolution.ConflictResolver;
+import org.axonframework.eventsourcing.conflictresolution.Conflicts;
 import org.axonframework.modelling.command.AggregateIdentifier;
 import org.axonframework.modelling.command.AggregateLifecycle;
 import org.axonframework.spring.stereotype.Aggregate;
@@ -72,6 +76,23 @@ public class Wallet {
     protected void handle(PaidEvent event) {
         //the place where you would change the aggregate state.
         this.balance = this.balance.subtract(event.getPayAmount());
+    }
+
+    @CommandHandler//if we don't provide a conflictResolver, it expects to last version come
+    public void handle(WithdrawCommand command, ConflictResolver conflictResolver) {
+        //the place where you would put your decision-making/business logic.Because aggregate is in the correct state to decide
+        final BigDecimal withdrawAmount = command.getWithdrawAmount();
+
+        checkBalance(withdrawAmount);
+
+        var event = new WithdrawnEvent(withdrawAmount);
+        AggregateLifecycle.apply(event);
+    }
+
+    @EventSourcingHandler//it used to form aggregate current state.(a.k.s Aggregation)
+    protected void handle(WithdrawnEvent event) {
+        //the place where you would change the aggregate state.
+        this.balance = this.balance.subtract(event.getWithdrawAmount());
     }
 
     private void checkDepositLimit(BigDecimal depositAmount) {

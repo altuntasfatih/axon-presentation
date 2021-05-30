@@ -34,6 +34,11 @@ public class WalletService {
         sendCommand(command);
     }
 
+    public void withdraw(String walletId, Long version, BigDecimal amount) {
+        final WithdrawCommand command = new WithdrawCommand(walletId, version, amount);
+        sendCommand(command);
+    }
+
     //we can trigger taking snapshot manually.
     public void takeSnapshot(String walletId) {
         snapshotter.scheduleSnapshot(Wallet.class, walletId);
@@ -42,5 +47,6 @@ public class WalletService {
     protected <T> T sendCommand(Object command) {
         return commandGateway.sendAndWait(command);
     }
+
 
 }
