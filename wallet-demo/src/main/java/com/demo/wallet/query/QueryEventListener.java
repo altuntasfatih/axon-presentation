@@ -28,7 +28,7 @@ public class QueryEventListener {
     }
 
     @EventHandler
-    public void handle(DepositedEvent event, @SourceId String walletId, @SequenceNumber Long version) {
+    public void on(DepositedEvent event, @SourceId String walletId, @SequenceNumber Long version) {
         final WalletModel wallet = repository.findByWalletId(walletId);
         wallet.increaseBalance(event.getDepositAmount());
         wallet.setVersion(version);
@@ -38,7 +38,7 @@ public class QueryEventListener {
     }
 
     @EventHandler
-    public void handle(PaidEvent event, @SourceId String walletId, @SequenceNumber Long version) {
+    public void on(PaidEvent event, @SourceId String walletId, @SequenceNumber Long version) {
         final WalletModel wallet = repository.findByWalletId(walletId);
         wallet.decreaseBalance(event.getPayAmount());
         wallet.setVersion(version);
@@ -48,7 +48,7 @@ public class QueryEventListener {
     }
 
     @EventHandler
-    public void handle(WithdrawnEvent event, @SourceId String walletId, @SequenceNumber Long version) {
+    public void on(WithdrawnEvent event, @SourceId String walletId, @SequenceNumber Long version) {
         final WalletModel wallet = repository.findByWalletId(walletId);
         wallet.decreaseBalance(event.getWithdrawAmount());
         wallet.setVersion(version);
@@ -58,7 +58,7 @@ public class QueryEventListener {
     }
 
     @EventHandler
-    public void handle(PhoneNumberChangedEvent event, @SourceId String walletId, @SequenceNumber Long version) {
+    public void on(PhoneNumberChangedEvent event, @SourceId String walletId, @SequenceNumber Long version) {
         final WalletModel wallet = repository.findByWalletId(walletId);
         wallet.setVersion(version);
         wallet.setPhoneNumber(event.getPhoneNumber());
