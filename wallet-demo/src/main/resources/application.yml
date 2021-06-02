@@ -23,4 +23,6 @@ axon:
         mode: subscribing
       mail:
         mode: tracking
+      query:
+        mode: tracking
 

@@ -12,7 +12,7 @@ import java.math.BigDecimal;
 public class WalletService {
 
     private final Snapshotter snapshotter;
-    private final CommandGateway commandGateway;//It uses the CommandBus underneath to perform  dispatching of the message.
+    private final CommandGateway commandGateway;//It uses the CommandBus underneath to perform dispatching of the command to command handlers..
 
     public WalletService(Snapshotter snapshotter, CommandGateway commandGateway) {
         this.snapshotter = snapshotter;
