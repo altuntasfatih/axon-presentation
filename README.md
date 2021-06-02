@@ -14,6 +14,7 @@ Branches:
 * [event-handler](https://github.com/altuntasfatih/axon_presentation/tree/axon/event-handler)
 * [snapshotting](https://github.com/altuntasfatih/axon_presentation/tree/axon/snapshotting)
 * [conflict](https://github.com/altuntasfatih/axon_presentation/tree/axon/conflict)
+* [query](https://github.com/altuntasfatih/axon-presentation/tree/axon/query)
 
 
 Not: It is not finished yet.
