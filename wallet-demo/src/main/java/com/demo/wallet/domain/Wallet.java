@@ -33,7 +33,7 @@ public class Wallet {
     }
 
     @EventSourcingHandler
-    protected void handle(WalletCreatedEvent event) {
+    protected void on(WalletCreatedEvent event) {
         this.walletId = event.getWalletId();//it is mandatory for first event :)
         this.balance = event.getBalance();
     }
@@ -50,7 +50,7 @@ public class Wallet {
     }
 
     @EventSourcingHandler//it used to form aggregate current state.(a.k.s Aggregation)
-    protected void handle(DepositedEvent event) {
+    protected void on(DepositedEvent event) {
         //the place where you would change the aggregate state.
         this.balance = this.balance.add(event.getDepositAmount());
     }
@@ -66,7 +66,7 @@ public class Wallet {
     }
 
     @EventSourcingHandler
-    protected void handle(PaidEvent event) {
+    protected void on(PaidEvent event) {
         //the place where you would change the aggregate state.
         this.balance = this.balance.subtract(event.getPayAmount());
     }
@@ -82,7 +82,7 @@ public class Wallet {
     }
 
     @EventSourcingHandler
-    protected void handle(WithdrawnEvent event) {
+    protected void on(WithdrawnEvent event) {
         //the place where you would change the aggregate state.
         this.balance = this.balance.subtract(event.getWithdrawAmount());
     }
@@ -102,9 +102,10 @@ public class Wallet {
     }
 
     @EventSourcingHandler
-    protected void handle(PhoneNumberChangedEvent event) {
+    protected void on(PhoneNumberChangedEvent event) {
         this.phoneNumber = event.getPhoneNumber();
     }
+
 
     private void checkDepositLimit(BigDecimal depositAmount) {
         if (this.balance.add(depositAmount).compareTo(BigDecimal.valueOf(750)) > 0) {
