@@ -11,14 +11,14 @@ import org.springframework.web.bind.annotation.*;
 
 @RequestMapping("/v1/wallets/")
 @RestController
-public class MoneyTransferController {
+public class MoneyRequestController {
     private final CommandGateway commandGateway;
 
-    public MoneyTransferController(CommandGateway commandGateway) {
+    public MoneyRequestController(CommandGateway commandGateway) {
         this.commandGateway = commandGateway;
     }
 
-    @PostMapping("/{walletId}/request-transfer")
+    @PostMapping("/{walletId}/request-money")
     public void requestMoney(@PathVariable("walletId") String walletId, @RequestBody MoneyRequest request) {
         var moneyRequestCommand = new RequestMoneyCommand(walletId, request.getRequestId(), request.getFromId(), request.getAmount());
         commandGateway.sendAndWait(moneyRequestCommand);
