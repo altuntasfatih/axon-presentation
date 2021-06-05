@@ -33,7 +33,7 @@ public class Wallet {
     }
 
     @EventSourcingHandler
-    protected void handle(WalletCreatedEvent event) {
+    protected void on(WalletCreatedEvent event) {
         this.walletId = event.getWalletId();//it is mandatory for first event :)
         this.balance = event.getBalance();
     }
