@@ -17,11 +17,9 @@ import java.util.concurrent.CompletableFuture;
 public class WalletController {
 
     private final WalletService walletService;
-    private final QueryGateway queryGateway;//It uses the QueryBus underneath to perform dispatching of the query to query handlers..
 
     public WalletController(WalletService walletService, QueryGateway queryGateway) {
         this.walletService = walletService;
-        this.queryGateway = queryGateway;
     }
 
     @PostMapping("/{walletId}")
@@ -49,9 +47,4 @@ public class WalletController {
         walletService.changePhoneNumber(walletId, request.getVersion(), request.getPhoneNumber());
     }
 
-    @GetMapping("/{walletId}")
-    public CompletableFuture<WalletModel> getWallet(@PathVariable("walletId") String walletId) {
-        final GetWalletByIdQuery query = new GetWalletByIdQuery(walletId);
-        return queryGateway.query(query, WalletModel.class);
-    }
 }
