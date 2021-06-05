@@ -52,7 +52,7 @@ public class Wallet {
     }
 
     @EventSourcingHandler//it used to form aggregate current state.(a.k.s Aggregation)
-    protected void handle(DepositedEvent event) {
+    protected void on(DepositedEvent event) {
         //the place where you would change the aggregate state.
         this.balance = this.balance.add(event.getDepositAmount());
     }
@@ -69,7 +69,7 @@ public class Wallet {
     }
 
     @EventSourcingHandler//it used to form aggregate current state.(a.k.s Aggregation)
-    protected void handle(PaidEvent event) {
+    protected void on(PaidEvent event) {
         //the place where you would change the aggregate state.
         this.balance = this.balance.subtract(event.getPayAmount());
     }
