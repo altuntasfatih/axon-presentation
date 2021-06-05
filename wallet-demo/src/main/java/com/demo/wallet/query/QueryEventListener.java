@@ -66,4 +66,24 @@ public class QueryEventListener {
 
         log.info("WalletQueryModel deposit event is handled for {}", wallet.getWalletId());
     }
+
+    @EventHandler
+    public void on(MoneyRequestCompletedEvent event, @SourceId String walletId, @SequenceNumber Long version) {
+        final WalletModel wallet = repository.findByWalletId(walletId);
+        wallet.setVersion(version);
+        wallet.increaseBalance(event.getAmount());
+        repository.save(wallet);
+
+        log.info("WalletQueryModel MoneyRequestCompletedEvent event is handled for {}", wallet.getWalletId());
+    }
+
+    @EventHandler
+    public void on(MoneyRequestApprovedEvent event, @SourceId String walletId, @SequenceNumber Long version) {
+        final WalletModel wallet = repository.findByWalletId(walletId);
+        wallet.setVersion(version);
+        wallet.decreaseBalance(event.getAmount());
+        repository.save(wallet);
+
+        log.info("WalletQueryModel MoneyRequestApprovedEvent event is handled for {}", wallet.getWalletId());
+    }
 }
