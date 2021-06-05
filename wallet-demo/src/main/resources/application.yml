@@ -16,6 +16,8 @@ spring:
 axon:
   serializer:
     events: jackson
+    messages: jackson
+    general: jackson
   eventhandling:
     processors:
       fraud:

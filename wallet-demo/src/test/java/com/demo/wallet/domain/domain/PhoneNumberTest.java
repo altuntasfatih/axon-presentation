@@ -1,6 +1,7 @@
-package com.demo.wallet.domain;
+package com.demo.wallet.domain.domain;
 
 import com.demo.wallet.command.ChangePhoneNumberCommand;
+import com.demo.wallet.domain.Wallet;
 import com.demo.wallet.event.DepositedEvent;
 import com.demo.wallet.event.PhoneNumberChangedEvent;
 import com.demo.wallet.event.WalletCreatedEvent;

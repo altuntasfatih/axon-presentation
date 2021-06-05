@@ -1,6 +1,7 @@
-package com.demo.wallet.domain;
+package com.demo.wallet.domain.domain;
 
 import com.demo.wallet.command.CreateWalletCommand;
+import com.demo.wallet.domain.Wallet;
 import com.demo.wallet.event.WalletCreatedEvent;
 import org.axonframework.test.aggregate.AggregateTestFixture;
 import org.axonframework.test.aggregate.FixtureConfiguration;

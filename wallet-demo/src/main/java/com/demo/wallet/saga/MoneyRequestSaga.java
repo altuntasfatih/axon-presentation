@@ -1,8 +1,13 @@
 package com.demo.wallet.saga;
 
-import com.demo.wallet.command.MoneyTransferCommand;
+import com.demo.wallet.command.CompleteMoneyRequestCommand;
 import com.demo.wallet.command.RollBackMoneyTransferCommand;
 import com.demo.wallet.event.*;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 import org.axonframework.commandhandling.gateway.CommandGateway;
 import org.axonframework.messaging.annotation.SourceId;
 import org.axonframework.modelling.saga.SagaEventHandler;
@@ -11,54 +16,58 @@ import org.axonframework.modelling.saga.StartSaga;
 import org.axonframework.spring.stereotype.Saga;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import java.math.BigDecimal;
-
 @Saga
+@NoArgsConstructor
+@AllArgsConstructor
+@Getter
+@Setter
 public class MoneyRequestSaga {
 
-    private String from;
-    private String to;
-    private BigDecimal amount;
+    private String requesterId;
+    private String fromId;
+    private String requestId;
     private Boolean approved;
 
     @Autowired
-    private transient CommandGateway commandGateway;
+    @JsonIgnore
+    private CommandGateway commandGateway;
 
     @StartSaga
     @SagaEventHandler(associationProperty = "requestId")
-    public void on(MoneyRequestedEvent event, @SourceId String from) {
-        this.from = from;
-        this.to = event.getTo();
-        amount = event.getAmount();
+    public void on(MoneyRequestedEvent event, @SourceId String requesterId) {
+        this.requesterId = requesterId;
+        this.fromId = event.getFromId();
+        this.requestId = event.getRequestId();
+        this.approved = false;
     }
 
     @SagaEventHandler(associationProperty = "requestId")
     public void on(MoneyRequestApprovedEvent event, @SourceId String id) {
-        if (id.compareToIgnoreCase(to) == 0) {
+        if (fromId.compareToIgnoreCase(id) == 0) {
             this.approved = true;
-            commandGateway.sendAndWait(new MoneyTransferCommand());
+            commandGateway.sendAndWait(new CompleteMoneyRequestCommand(requesterId, requestId));
         }
     }
 
     @SagaEventHandler(associationProperty = "requestId")
     public void on(MoneyRequestRejectedEvent event, @SourceId String id) {
-        if (id.compareToIgnoreCase(to) == 0) {
+        if (fromId.compareToIgnoreCase(id) == 0) {
             SagaLifecycle.end();
         }
     }
 
     @SagaEventHandler(associationProperty = "requestId")
-    public void on(MoneyTransferedEvent event, @SourceId String id) {
-        if (from.compareToIgnoreCase(to) == 0) {
+    public void on(MoneyRequestCompletedEvent event, @SourceId String id) {
+        if (requesterId.compareToIgnoreCase(id) == 0) {
             SagaLifecycle.end();
         }
     }
 
     @SagaEventHandler(associationProperty = "requestId")
-    public void on(MoneyTransferFailedEvent event, @SourceId String id) {
+    public void on(MoneyRequestFailedEvent event, @SourceId String id) {
         if (approved) {
             commandGateway.sendAndWait(new RollBackMoneyTransferCommand());
+            SagaLifecycle.end();
         }
-        SagaLifecycle.end();
     }
 }

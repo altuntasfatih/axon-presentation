@@ -13,7 +13,9 @@ import java.math.BigDecimal;
 @AllArgsConstructor
 @NoArgsConstructor
 @ToString
-public class MoneyRequestApprovedEvent {
+public class MoneyRequestCompletedEvent {
+
     private String requestId;
     private BigDecimal amount;
+    private String fromId;
 }

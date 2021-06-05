@@ -17,5 +17,5 @@ public class MoneyRequestedEvent {
 
     private String requestId;
     private BigDecimal amount;
-    private String to;
+    private String fromId;
 }

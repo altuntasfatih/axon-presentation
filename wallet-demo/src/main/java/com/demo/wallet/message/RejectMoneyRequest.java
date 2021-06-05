@@ -1,19 +1,16 @@
-package com.demo.wallet.event;
+package com.demo.wallet.message;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.ToString;
-import org.axonframework.serialization.Revision;
 
 import java.math.BigDecimal;
 
-@Revision("1.0")//for versioning events
-@Getter
 @AllArgsConstructor
 @NoArgsConstructor
-@ToString
-public class MoneyRequestApprovedEvent {
+@Getter
+public class RejectMoneyRequest {
     private String requestId;
+    private String fromId;
     private BigDecimal amount;
 }

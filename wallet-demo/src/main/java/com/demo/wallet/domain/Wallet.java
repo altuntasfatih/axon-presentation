@@ -14,6 +14,8 @@ import org.axonframework.modelling.command.AggregateLifecycle;
 import org.axonframework.spring.stereotype.Aggregate;
 
 import java.math.BigDecimal;
+import java.util.HashMap;
+import java.util.Map;
 
 @Aggregate(snapshotTriggerDefinition = "walletSnapshotTrigger")//a.k.a know as Aggregate root(Event Sources Aggregate)
 @Getter
@@ -25,6 +27,7 @@ public class Wallet {
     private String walletId;// it is hard requirements
     private BigDecimal balance;
     private String phoneNumber = "";
+    private Map<String, PendingMoneyRequest> pendingMoneyRequestMap;
 
     @CommandHandler
     public Wallet(CreateWalletCommand command) {
@@ -106,6 +109,51 @@ public class Wallet {
         this.phoneNumber = event.getPhoneNumber();
     }
 
+    @CommandHandler
+    public void handle(RequestMoneyCommand command) {
+        var event = new MoneyRequestedEvent(command.getRequestId(), command.getAmount(), command.getFromId());
+        AggregateLifecycle.apply(event);
+    }
+
+    @EventSourcingHandler
+    protected void on(MoneyRequestedEvent event) {
+        getOrCreatePendingMoneyRequestMap().put(event.getRequestId(), new PendingMoneyRequest(event.getRequestId(), event.getFromId(), event.getAmount()));
+    }
+
+    @CommandHandler
+    public void handle(CompleteMoneyRequestCommand command) {
+        final PendingMoneyRequest request = getOrCreatePendingMoneyRequestMap().get(command.getRequestId());
+        if (request != null) {
+
+            //checkLimit then accepts or publish moneyRequestFailedEvent
+            var event = new MoneyRequestCompletedEvent(request.getRequestId(), request.getAmount(), request.getFromId());
+            AggregateLifecycle.apply(event);
+        }
+    }
+
+    @EventSourcingHandler
+    protected void on(MoneyRequestCompletedEvent event) {
+        getOrCreatePendingMoneyRequestMap().remove(event.getRequestId());
+        this.balance = this.balance.add(event.getAmount());
+    }
+
+    @CommandHandler
+    public void handle(ApproveMoneyRequestCommand command) {
+        checkBalance(command.getAmount());
+        var event = new MoneyRequestApprovedEvent(command.getRequestId(), command.getAmount());
+        AggregateLifecycle.apply(event);
+    }
+
+    @EventSourcingHandler
+    protected void on(MoneyRequestApprovedEvent event) {
+        this.balance = this.balance.subtract(event.getAmount());
+    }
+
+    @CommandHandler
+    public void handle(MoneyRequestRejectedEvent command) {
+        var event = new MoneyRequestRejectedEvent(command.getRequestId());
+        AggregateLifecycle.apply(event);
+    }
 
     private void checkDepositLimit(BigDecimal depositAmount) {
         if (this.balance.add(depositAmount).compareTo(BigDecimal.valueOf(750)) > 0) {
@@ -117,5 +165,12 @@ public class Wallet {
         if (balance.compareTo(requestAmount) < 0) {
             throw new InsufficientFundsException();
         }
+    }
+
+    private Map<String, PendingMoneyRequest> getOrCreatePendingMoneyRequestMap() {
+        if (this.pendingMoneyRequestMap == null) {
+            this.pendingMoneyRequestMap = new HashMap<>();
+        }
+        return this.pendingMoneyRequestMap;
     }
 }
