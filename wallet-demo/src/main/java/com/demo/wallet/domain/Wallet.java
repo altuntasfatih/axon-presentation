@@ -45,7 +45,9 @@ public class Wallet {
         //the place where you would put your decision-making/business logic.Because aggregate is in the correct state to decide
         final BigDecimal depositAmount = command.getDepositAmount();
 
-        checkDepositLimit(command.getDepositAmount());
+        if (this.balance.add(depositAmount).compareTo(DEPOSIT_LIMIT) > 0) {
+            throw new DepositLimitExceedException();
+        }
 
         var event = new DepositedEvent(depositAmount);
         AggregateLifecycle.apply(event);
@@ -74,11 +76,6 @@ public class Wallet {
         this.balance = this.balance.subtract(event.getPayAmount());
     }
 
-    private void checkDepositLimit(BigDecimal depositAmount) {
-        if (this.balance.add(depositAmount).compareTo(BigDecimal.valueOf(750)) > 0) {
-            throw new DepositLimitExceedException();
-        }
-    }
 
     private void checkBalance(BigDecimal requestAmount) {
         if (balance.compareTo(requestAmount) < 0) {

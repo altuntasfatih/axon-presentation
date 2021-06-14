@@ -30,7 +30,11 @@ public class PayTest {
     @Test
     public void it_should_publish_paidEvent() {
         final BigDecimal payAmount = new BigDecimal("200.00");
-        textFixture.when(new PayCommand(WALLET_ID, payAmount))
+
+        new AggregateTestFixture<>(Wallet.class)
+                .given(new WalletCreatedEvent(WALLET_ID, BigDecimal.ZERO))
+                .andGiven(new DepositedEvent(new BigDecimal("500")))
+                .when(new PayCommand(WALLET_ID, payAmount))
                 .expectSuccessfulHandlerExecution()
                 .expectEvents(new PaidEvent(payAmount))
                 .expectState(wallet -> {
