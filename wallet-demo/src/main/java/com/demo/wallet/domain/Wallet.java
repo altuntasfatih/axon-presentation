@@ -29,6 +29,7 @@ public class Wallet {
     private String phoneNumber = "";
     private Map<String, PendingMoneyRequest> pendingMoneyRequestMap;
 
+
     @CommandHandler
     public Wallet(CreateWalletCommand command) {
         var event = new WalletCreatedEvent(command.getWalletId(), BigDecimal.ZERO);
@@ -147,6 +148,17 @@ public class Wallet {
     @EventSourcingHandler
     protected void on(MoneyRequestApprovedEvent event) {
         this.balance = this.balance.subtract(event.getAmount());
+    }
+
+    @CommandHandler
+    public void handle(RollBackMoneyTransferCommand command) {
+        var event = new MoneyRequestRollbackEvent(command.getRequestId(), command.getAmount());
+        AggregateLifecycle.apply(event);
+    }
+
+    @EventSourcingHandler
+    protected void on(MoneyRequestRollbackEvent event) {
+        this.balance = this.balance.add(event.getAmount());
     }
 
     @CommandHandler

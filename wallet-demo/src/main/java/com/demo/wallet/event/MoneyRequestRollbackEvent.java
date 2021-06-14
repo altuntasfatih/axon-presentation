@@ -8,13 +8,12 @@ import org.axonframework.serialization.Revision;
 
 import java.math.BigDecimal;
 
-@Revision("1.0")//for versioning events
+@Revision("1.0")
 @Getter
 @AllArgsConstructor
 @NoArgsConstructor
 @ToString
-public class MoneyRequestCompletedEvent {
+public class MoneyRequestRollbackEvent {
     private String requestId;
     private BigDecimal amount;
-    private String fromId;
 }

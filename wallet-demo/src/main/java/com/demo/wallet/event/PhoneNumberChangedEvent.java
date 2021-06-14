@@ -13,4 +13,5 @@ import org.axonframework.serialization.Revision;
 @ToString
 public class PhoneNumberChangedEvent {
     private String phoneNumber;
+
 }
