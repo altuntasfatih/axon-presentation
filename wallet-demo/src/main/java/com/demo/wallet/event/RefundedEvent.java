@@ -1,15 +1,17 @@
-package com.demo.wallet.message;
+package com.demo.wallet.event;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.axonframework.serialization.Revision;
 
 import java.math.BigDecimal;
 
-@NoArgsConstructor
-@AllArgsConstructor
+@Revision("1.0")//for versioning events
 @Getter
-public class PayRequest {
+@AllArgsConstructor
+@NoArgsConstructor
+public class RefundedEvent {
     private String orderId;
     private BigDecimal amount;
 }

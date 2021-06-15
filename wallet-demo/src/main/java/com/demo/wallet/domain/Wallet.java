@@ -3,8 +3,10 @@ package com.demo.wallet.domain;
 import com.demo.wallet.command.CreateWalletCommand;
 import com.demo.wallet.command.DepositCommand;
 import com.demo.wallet.command.PayCommand;
+import com.demo.wallet.command.RefundCommand;
 import com.demo.wallet.event.DepositedEvent;
 import com.demo.wallet.event.PaidEvent;
+import com.demo.wallet.event.RefundedEvent;
 import com.demo.wallet.event.WalletCreatedEvent;
 import com.demo.wallet.exception.DepositLimitExceedException;
 import com.demo.wallet.exception.InsufficientFundsException;
@@ -28,6 +30,7 @@ public class Wallet {
     private String walletId;// it is hard requirements
     private BigDecimal balance;
 
+
     @CommandHandler
     public Wallet(CreateWalletCommand command) {
         var event = new WalletCreatedEvent(command.getWalletId(), BigDecimal.ZERO);
@@ -45,9 +48,7 @@ public class Wallet {
         //the place where you would put your decision-making/business logic.Because aggregate is in the correct state to decide
         final BigDecimal depositAmount = command.getDepositAmount();
 
-        if (this.balance.add(depositAmount).compareTo(DEPOSIT_LIMIT) > 0) {
-            throw new DepositLimitExceedException();
-        }
+        checkDepositLimit(command.getDepositAmount());
 
         var event = new DepositedEvent(depositAmount);
         AggregateLifecycle.apply(event);
@@ -66,16 +67,37 @@ public class Wallet {
 
         checkBalance(payAmount);
 
-        var event = new PaidEvent(payAmount);
+        var event = new PaidEvent(command.getOrderId(), payAmount);
         AggregateLifecycle.apply(event);
     }
 
     @EventSourcingHandler//it used to form aggregate current state.(a.k.s Aggregation)
     protected void on(PaidEvent event) {
         //the place where you would change the aggregate state.
-        this.balance = this.balance.subtract(event.getPayAmount());
+        this.balance = this.balance.subtract(event.getAmount());
     }
 
+    @CommandHandler
+    public void handle(RefundCommand command) {
+        //the place where you would put your decision-making/business logic.Because aggregate is in the correct state to decide
+        final BigDecimal refundAmount = command.getRefundAmount();
+
+        var event = new RefundedEvent(command.getOrderId(), refundAmount);
+        AggregateLifecycle.apply(event);
+    }
+
+    @EventSourcingHandler//it used to form aggregate current state.(a.k.s Aggregation)
+    protected void on(RefundedEvent event) {
+        //the place where you would change the aggregate state.
+        this.balance = this.balance.add(event.getAmount());
+    }
+
+
+    private void checkDepositLimit(BigDecimal depositAmount) {
+        if (this.balance.add(depositAmount).compareTo(DEPOSIT_LIMIT) > 0) {
+            throw new DepositLimitExceedException();
+        }
+    }
 
     private void checkBalance(BigDecimal requestAmount) {
         if (balance.compareTo(requestAmount) < 0) {

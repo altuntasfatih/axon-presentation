@@ -12,5 +12,6 @@ import java.math.BigDecimal;
 @AllArgsConstructor
 @NoArgsConstructor
 public class PaidEvent {
-    private BigDecimal payAmount;
+    private String orderId;
+    private BigDecimal amount;
 }

@@ -25,13 +25,19 @@ public class WalletService {
         sendCommand(command);
     }
 
-    public void pay(String walletId, BigDecimal payAmount) {
-        final PayCommand command = new PayCommand(walletId, payAmount);
+    public void pay(String walletId, String orderId, BigDecimal payAmount) {
+        final PayCommand command = new PayCommand(walletId, orderId, payAmount);
+        sendCommand(command);
+    }
+
+    public void refund(String walletId, String orderId, BigDecimal refundAmount) {
+        final RefundCommand command = new RefundCommand(walletId, orderId, refundAmount);
         sendCommand(command);
     }
 
     protected <T> T sendCommand(Object command) {
         return commandGateway.sendAndWait(command);
     }
+
 
 }

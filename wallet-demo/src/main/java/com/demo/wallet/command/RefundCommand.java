@@ -6,16 +6,16 @@ import org.axonframework.modelling.command.TargetAggregateIdentifier;
 import java.math.BigDecimal;
 
 @Getter
-public class PayCommand {
+public class RefundCommand {
 
     @TargetAggregateIdentifier
     private final String walletId;//to find aggregate it is mandatory
     private final String orderId;
-    private final BigDecimal payAmount;
+    private final BigDecimal refundAmount;
 
-    public PayCommand(String walletId, String orderId, BigDecimal payAmount) {
+    public RefundCommand(String walletId, String orderId, BigDecimal refundAmount) {
         this.walletId = walletId;
         this.orderId = orderId;
-        this.payAmount = payAmount;
+        this.refundAmount = refundAmount;
     }
 }

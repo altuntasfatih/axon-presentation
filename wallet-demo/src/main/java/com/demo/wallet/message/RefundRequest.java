@@ -9,7 +9,7 @@ import java.math.BigDecimal;
 @NoArgsConstructor
 @AllArgsConstructor
 @Getter
-public class PayRequest {
+public class RefundRequest {
     private String orderId;
-    private BigDecimal amount;
+    private BigDecimal refundAmount;
 }
