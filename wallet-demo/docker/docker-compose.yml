@@ -1,0 +1,17 @@
+version: '3'
+
+services:
+  db:
+    image: postgres:11.6-alpine
+    container_name: local_wallet_postgres
+    volumes:
+      - db:/var/lib/postgresql/data
+      - ./postgres/init.sql:/docker-entrypoint-initdb.d/init.sql
+    environment:
+      POSTGRES_USER: root
+      POSTGRES_PASSWORD: root
+    ports:
+      - "5432:5432"
+volumes:
+  db:
+    driver: local

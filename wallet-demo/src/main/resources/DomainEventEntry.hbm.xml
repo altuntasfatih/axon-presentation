@@ -1,0 +1,30 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC
+        "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+        "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping package="org.axonframework.eventsourcing.eventstore.jpa" default-access="field">
+
+    <typedef class="com.demo.wallet.JsonbUserType" name="com.demo.wallet.JsonbUserType"/>
+
+    <class name="DomainEventEntry">
+
+        <id name="globalIndex">
+            <generator class="native"/>
+        </id>
+        <property name="type"/>
+        <property name="aggregateIdentifier" unique-key="uk_event" not-null="true"/>
+        <property name="sequenceNumber" unique-key="uk_event" not-null="true"/>
+        <property name="eventIdentifier" unique="true" not-null="true"/>
+        <property name="timeStamp" not-null="true"/>
+        <property name="payloadType" not-null="true"/>
+        <property name="payloadRevision"/>
+
+        <property name="payload" type="JsonbUserType" not-null="true">
+            <column name="payload" sql-type="jsonb"/>
+        </property>
+        <property name="metaData" type="JsonbUserType">
+            <column name="metaData" sql-type="jsonb"/>
+        </property>
+    </class>
+</hibernate-mapping>

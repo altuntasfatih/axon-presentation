@@ -3,15 +3,21 @@ server:
 
 spring:
   application:
-    name: wallet-dome
+    name: wallet-demo
+  # Jpa
   jpa:
+    show-sql: false
     hibernate:
-      ddl-auto: create
-  h2:
-    console:
-      enabled: true
+      ddl-auto: create # can't touch this
+    properties:
+      hibernate.jdbc.timezone: UTC
+    database-platform: org.hibernate.dialect.PostgreSQLDialect
+
   datasource:
-    url: jdbc:h2:mem:testdb;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE
+    url: jdbc:postgresql://localhost:5432/wallet_demo_db
+    username: wallet_demo_user
+    password: password
+    driver-class-name: org.postgresql.Driver
 
 axon:
   serializer:
