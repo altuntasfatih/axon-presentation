@@ -16,6 +16,7 @@
     <properties>
         <java.version>11</java.version>
         <swagger.version>2.9.2</swagger.version>
+        <axon.version>4.5</axon.version>
     </properties>
     <dependencies>
         <dependency>
@@ -32,7 +33,24 @@
             <artifactId>spring-boot-starter-test</artifactId>
             <scope>test</scope>
         </dependency>
+        <dependency>
+            <groupId>org.axonframework</groupId>
+            <artifactId>axon-spring-boot-starter</artifactId>
+            <exclusions>
+                <exclusion> <!-- we don't need axon servee -->
+                    <groupId>org.axonframework</groupId>
+                    <artifactId>axon-server-connector</artifactId>
+                </exclusion>
+            </exclusions>
+            <version>${axon.version}</version>
 
+        </dependency>
+        <dependency>
+            <groupId>org.axonframework</groupId>
+            <artifactId>axon-test</artifactId>
+            <version>${axon.version}</version>
+            <scope>test</scope>
+        </dependency>
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-web</artifactId>
