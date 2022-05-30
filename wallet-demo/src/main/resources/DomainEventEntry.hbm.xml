@@ -20,10 +20,10 @@
         <property name="payloadType" not-null="true"/>
         <property name="payloadRevision"/>
 
-        <property name="payload" type="JsonbUserType" not-null="true">
+        <property name="payload" type="com.demo.wallet.JsonbUserType" not-null="true">
             <column name="payload" sql-type="jsonb"/>
         </property>
-        <property name="metaData" type="JsonbUserType">
+        <property name="metaData" type="com.demo.wallet.JsonbUserType">
             <column name="metaData" sql-type="jsonb"/>
         </property>
     </class>

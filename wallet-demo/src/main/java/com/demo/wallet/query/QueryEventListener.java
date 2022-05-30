@@ -9,8 +9,8 @@ import org.axonframework.messaging.annotation.SourceId;
 import org.springframework.stereotype.Component;
 
 @Slf4j
-@Component
-@ProcessingGroup("query")//it is a Tracking Event Processors.Look token_entry table.It works like as outbox pattern.
+//@Component
+//@ProcessingGroup("query")//it is a Tracking Event Processors.Look token_entry table.It works like as outbox pattern.
 public class QueryEventListener {
 
     private WalletQueryRepository repository;

@@ -29,7 +29,6 @@ public class Wallet {
     private String phoneNumber = "";
     private Map<String, PendingMoneyRequest> pendingMoneyRequestMap;
 
-
     @CommandHandler
     public Wallet(CreateWalletCommand command) {
         var event = new WalletCreatedEvent(command.getWalletId(), BigDecimal.ZERO);

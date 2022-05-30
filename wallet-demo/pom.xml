@@ -5,7 +5,8 @@
     <parent>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
-        <version>2.4.5</version>
+        <version>2.5.14</version>
+        <type>pom</type>
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
     <groupId>com.example</groupId>
@@ -16,7 +17,7 @@
     <properties>
         <java.version>11</java.version>
         <swagger.version>2.9.2</swagger.version>
-        <axon.version>4.5</axon.version>
+        <axon.version>4.5.9</axon.version>
     </properties>
     <dependencies>
         <dependency>
@@ -37,13 +38,12 @@
             <groupId>org.axonframework</groupId>
             <artifactId>axon-spring-boot-starter</artifactId>
             <exclusions>
-                <exclusion> <!-- we don't need axon servee -->
+                <exclusion> <!-- we don't need axon server -->
                     <groupId>org.axonframework</groupId>
                     <artifactId>axon-server-connector</artifactId>
                 </exclusion>
             </exclusions>
             <version>${axon.version}</version>
-
         </dependency>
         <dependency>
             <groupId>org.axonframework</groupId>
@@ -65,7 +65,6 @@
             <artifactId>springfox-swagger-ui</artifactId>
             <version>${swagger.version}</version>
         </dependency>
-
 
         <dependency>
             <groupId>org.springframework.boot</groupId>

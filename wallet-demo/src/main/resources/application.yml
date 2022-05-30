@@ -8,10 +8,12 @@ spring:
   jpa:
     show-sql: false
     hibernate:
-      ddl-auto: create # can't touch this
+      ddl-auto: create-drop # can't touch this
     properties:
       hibernate.jdbc.timezone: UTC
+      hibernate.dialect: com.demo.wallet.config.AxonPostgreSQLDialect
     database-platform: org.hibernate.dialect.PostgreSQLDialect
+    mapping-resources: "DomainEventEntry.hbm.xml"
 
   datasource:
     url: jdbc:postgresql://localhost:5432/wallet_demo_db
@@ -22,8 +24,6 @@ spring:
 axon:
   serializer:
     events: jackson
-    messages: jackson
-    general: jackson
   eventhandling:
     processors:
       fraud:
@@ -33,4 +33,3 @@ axon:
         mode: tracking
       query:
         mode: tracking
-

@@ -19,7 +19,7 @@ public class AxonConfig {
         return new EventCountSnapshotTriggerDefinition(snapshotter, THRESHOLD);
     }
 
-    //@Bean//default snapshot operations occurs sync. if we configure the AggregateSnapshotter, it can run async.
+    @Bean//default snapshot operations occurs sync. if we configure the AggregateSnapshotter, it can run async.
     public SpringAggregateSnapshotterFactoryBean aggregateSnapshotter() {
         ExecutorService executor = Executors.newFixedThreadPool(3);
         final SpringAggregateSnapshotterFactoryBean bean = new SpringAggregateSnapshotterFactoryBean();
